@@ -63,6 +63,7 @@
           Import Data
         </button>
         <input id="file-input" type="file" accept=".csv,.mat,.xlsx" hidden />
+        <div class="import-note">Supports .csv, .xlsx, and .mat &mdash; .mat files are converted to CSV in your browser. Nested MATLAB structs are flattened into dotted names, e.g. <code>field1.field2.signal</code>. Both numeric and text/category columns are supported.</div>
         <div id="file-list"></div>
       </div>
 

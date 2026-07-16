@@ -772,6 +772,20 @@ body { background: var(--bg); font-family: sans-serif; }
 }
 
 
+.import-note {
+  font-size: 11px;
+  color: var(--text-faint);
+  line-height: 1.4;
+  padding: 0 2px;
+}
+
+.import-note code {
+  font-family: 'IBM Plex Mono', monospace;
+  background: var(--surface-2);
+  border-radius: 3px;
+  padding: 1px 4px;
+}
+
 #file-list {
   display: flex;
   flex-direction: column;
