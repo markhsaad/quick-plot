@@ -245,17 +245,21 @@ body { background: var(--bg); font-family: sans-serif; }
 .edit-btn:hover { background: var(--border); color: var(--text); }
 
 .delete-panel-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: none;
   border: none;
   color: var(--text);
   cursor: pointer;
-  font-size: 16px;
-  padding: 2px 4px;
+  padding: 4px;
   border-radius: 4px;
   line-height: 1;
   margin-left: auto;
   transition: background 0.15s, color 0.15s;
 }
+
+.delete-panel-btn svg { width: 14px; height: 14px; }
 
 .delete-panel-btn:hover { background: var(--danger-bg); color: var(--danger-text); }
 
@@ -779,6 +783,20 @@ body { background: var(--bg); font-family: sans-serif; }
   padding: 0 2px;
 }
 
+.sidebar-footer {
+  margin-top: auto;
+  padding: 10px 2px 2px;
+  border-top: 1px solid var(--border);
+}
+
+.sidebar-footer a {
+  font-size: 11px;
+  color: var(--text-faint);
+  text-decoration: none;
+}
+
+.sidebar-footer a:hover { color: var(--text-secondary); text-decoration: underline; }
+
 .import-note code {
   font-family: 'IBM Plex Mono', monospace;
   background: var(--surface-2);
@@ -991,14 +1009,18 @@ body { background: var(--bg); font-family: sans-serif; }
 }
 
 .delete-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: none;
   border: none;
   color: var(--text);
   cursor: pointer;
-  font-size: 16px;
   padding: 0;
   line-height: 1;
   flex-shrink: 0;
 }
+
+.delete-btn svg { width: 14px; height: 14px; }
 
 .delete-btn:hover { color: var(--danger-text); }

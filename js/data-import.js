@@ -405,7 +405,7 @@ function addFileEntry(name) {
   status.style.display = 'none'
   const del = document.createElement('button')
   del.className = 'delete-btn'
-  del.textContent = '🗑'
+  del.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M10 11v6M14 11v6"/><path d="M6 7l1 12a2 2 0 002 2h6a2 2 0 002-2l1-12"/><path d="M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3"/></svg>'
   del.title = 'Delete'
   del.addEventListener('click', () => {
     loadedFiles.delete(name)
