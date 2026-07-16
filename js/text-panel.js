@@ -234,6 +234,16 @@ function initTextBody(panel, body, cfg = {}) {
     try { savedRange.surroundContents(span) } catch (e) { /* partial element selection — skip */ }
   }
 
+  // Drops both the fake highlight span and the real DOM selection —
+  // restoreFocus() (used throughout the toolbar handlers) keeps re-selecting
+  // the saved range, so nothing else clears it on its own once an action is done.
+  const clearHighlight = () => {
+    removeFakeSel()
+    savedRange = null
+    const sel = window.getSelection()
+    if (sel.rangeCount > 0 && contentDiv.contains(sel.anchorNode)) sel.removeAllRanges()
+  }
+
   colorInput.addEventListener('focus', applyFakeSel)
 
   colorInput.addEventListener('input', () => {
@@ -252,12 +262,41 @@ function initTextBody(panel, body, cfg = {}) {
     save()
   })
 
-  // 'blur' alone is unreliable here since restoreFocus() above keeps stealing
-  // DOM focus back to contentDiv on every drag tick, which confuses some
-  // browsers' blur bookkeeping for the color popup. 'change' fires once,
-  // reliably, whenever the native picker actually closes.
+  // restoreFocus() above shifts DOM focus from colorInput to contentDiv on
+  // every drag tick, which fires 'blur' (and, in some browsers, 'change' too)
+  // repeatedly throughout the drag, not just once at the end — so neither
+  // can safely run the full clearHighlight(); wiping savedRange mid-drag
+  // leaves the next 'input' tick's foreColor with nothing valid to color.
+  // Both stay a harmless, idempotent cleanup of just the fake-sel span — the
+  // highlight itself is meant to persist until the user clicks elsewhere in
+  // the panel, handled below by contentMousedown/clearSelectionIfOutside.
   colorInput.addEventListener('blur', removeFakeSel)
   colorInput.addEventListener('change', removeFakeSel)
+
+  // Formatting actions above deliberately re-select the saved range
+  // (restoreFocus) so consecutive toolbar clicks keep applying to the same
+  // text — the highlight is meant to persist through that, and only clear
+  // once the user clicks elsewhere in the panel.
+  //
+  // "Elsewhere in the panel" covers two distinct cases: clicking a new spot
+  // inside contentDiv itself doesn't clear on its own (the fake-sel span is
+  // a plain DOM element, independent of where the browser's real caret
+  // moves), so that needs its own listener; clicking anywhere else on the
+  // page (outside both toolbar and contentDiv) needs the full clearHighlight
+  // since focus is leaving the editor entirely.
+  contentDiv.addEventListener('mousedown', () => {
+    removeFakeSel()
+    savedRange = null
+  })
+  const clearSelectionIfOutside = e => {
+    if (!document.body.contains(contentDiv)) {
+      document.removeEventListener('mousedown', clearSelectionIfOutside)
+      return
+    }
+    if (toolbar.contains(e.target) || contentDiv.contains(e.target)) return
+    clearHighlight()
+  }
+  document.addEventListener('mousedown', clearSelectionIfOutside)
 
   contentDiv.addEventListener('keyup',   syncToolbarState)
   contentDiv.addEventListener('mouseup', syncToolbarState)
