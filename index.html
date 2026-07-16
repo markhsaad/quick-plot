@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Quick Plot</title>
+  <link rel="icon" href="data:,">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text&family=DM+Mono&family=DM+Sans&family=EB+Garamond&family=Fira+Code&family=IBM+Plex+Mono&family=IBM+Plex+Sans&family=IBM+Plex+Serif&family=Inter&family=Josefin+Sans&family=Lato&family=Libre+Baskerville&family=Lora&family=Merriweather&family=Montserrat&family=Nunito&family=Open+Sans&family=Oswald&family=Playfair+Display&family=Poppins&family=PT+Mono&family=PT+Sans&family=PT+Serif&family=Raleway&family=Roboto&family=Roboto+Mono&family=Roboto+Slab&family=Rubik&family=Source+Code+Pro&family=Source+Sans+3&family=Space+Grotesk&family=Space+Mono&family=Ubuntu&family=Ubuntu+Mono&display=swap" rel="stylesheet">
+  <!-- defer: these are multi-MB downloads — without it they'd block HTML
+       parsing (and the first paint) until both finish loading. Deferred
+       scripts still download in parallel with parsing and execute in
+       document order right before DOMContentLoaded, so nothing below still
+       relies on synchronous <script> execution order breaks. -->
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js" defer></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <div id="app">
+    <div id="sidebar">
+      <div class="brand">
+        <div class="brand-mark">Q</div>
+        <span class="brand-name">Quick Plot</span>
+      </div>
+
+      <input id="session-title" type="text" class="form-input" placeholder="Untitled Session" />
+
+      <div class="nav-label">Create</div>
+      <div class="sidebar-group">
+        <button id="new-panel-btn" class="sidebar-btn">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5M4 19h16M8 15l3-4 3 3 4-6"/></svg>
+          New Plot
+        </button>
+        <button id="new-text-btn" class="sidebar-btn">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+          New Text
+        </button>
+      </div>
+
+      <div class="nav-label">Session</div>
+      <div class="sidebar-group">
+        <button id="export-btn" class="sidebar-btn">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 19h16"/></svg>
+          Export HTML
+        </button>
+        <button id="save-session-btn" class="sidebar-btn">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><path d="M17 21v-8H7v8"/><path d="M7 3v5h8"/></svg>
+          Save Session
+        </button>
+        <button id="load-session-btn" class="sidebar-btn">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><path d="M7 8l5-5 5 5"/><path d="M4 19h16"/></svg>
+          Load Session
+        </button>
+      </div>
+      <input id="session-input" type="file" accept=".json" hidden />
+
+      <div class="nav-label">Data</div>
+      <div id="data-panel">
+        <button id="import-btn" class="sidebar-btn">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 19h16"/></svg>
+          Import Data
+        </button>
+        <input id="file-input" type="file" accept=".csv,.mat,.xlsx" hidden />
+        <div id="file-list"></div>
+      </div>
+
+      <div class="nav-label">Settings</div>
+      <div class="settings-panel">
+        <label class="setting-row">
+          <span>Dark mode</span>
+          <input id="setting-dark-mode" type="checkbox" class="switch">
+        </label>
+        <label class="setting-row">
+          <span>Show background grid</span>
+          <input id="setting-grid" type="checkbox" class="switch" checked>
+        </label>
+        <label class="setting-row">
+          <span>Export panel borders</span>
+          <input id="setting-export-borders" type="checkbox" class="switch" checked>
+        </label>
+      </div>
+    </div>
+    <div id="plot"><div id="spacer" style="position:absolute;width:1px;height:1px;pointer-events:none"></div></div>
+  </div>
+
+  <!-- defer (not just position-at-bottom): the CDN scripts above are also
+       deferred now, and deferred scripts only run after the whole document
+       is parsed, in relative order — so these need defer too, or they'd
+       fire while parsing reaches this point, before Plotly/loadPyodide
+       exist yet (data-import.js's preload calls loadPyodide() at load time). -->
+  <script src="js/plot-type-registry.js" defer></script>
+  <script src="js/plot-types/cartesian2d.js" defer></script>
+  <script src="js/plot-types/line.js" defer></script>
+  <script src="js/plot-types/line3d.js" defer></script>
+  <script src="js/plot-types/scatter.js" defer></script>
+  <!-- Bar and histogram are disabled for now — re-add these two lines to
+       bring them back into the plot-type picker. -->
+  <!-- <script src="js/plot-types/bar.js" defer></script> -->
+  <!-- <script src="js/plot-types/histogram.js" defer></script> -->
+  <script src="js/theme.js" defer></script>
+  <script src="js/data-import.js" defer></script>
+  <script src="js/panels.js" defer></script>
+  <script src="js/plot-editor.js" defer></script>
+  <script src="js/text-panel.js" defer></script>
+  <script src="js/session.js" defer></script>
+  <script src="js/export.js" defer></script>
+  <script src="js/app.js" defer></script>
+</body>
+
+</html>
