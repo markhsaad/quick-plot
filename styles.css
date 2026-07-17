@@ -618,6 +618,22 @@ body { background: var(--bg); font-family: sans-serif; }
 
 .modal-confirm-btn:hover { background: var(--accent-hover-bg); }
 
+.feedback-modal { width: 440px; max-height: none; }
+
+.feedback-body {
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.feedback-textarea {
+  min-height: 110px;
+  resize: vertical;
+  font-family: inherit;
+  line-height: 1.4;
+}
+
 .color-swatches {
   display: flex;
   gap: 6px;
@@ -796,12 +812,18 @@ body { background: var(--bg); font-family: sans-serif; }
   display: flex;
   align-items: center;
   gap: 10px;
+  width: 100%;
+  background: transparent;
+  border: none;
   color: var(--text-secondary);
   text-decoration: none;
   font-weight: 600;
   font-size: 13px;
+  font-family: inherit;
+  text-align: left;
   padding: 9px 10px;
   border-radius: 8px;
+  cursor: pointer;
   transition: background 0.15s, color 0.15s;
 }
 
