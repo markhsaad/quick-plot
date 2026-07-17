@@ -785,17 +785,27 @@ body { background: var(--bg); font-family: sans-serif; }
 
 .sidebar-footer {
   margin-top: auto;
-  padding: 10px 2px 2px;
+  padding-top: 8px;
   border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
-.sidebar-footer a {
-  font-size: 11px;
-  color: var(--text-faint);
+.footer-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-secondary);
   text-decoration: none;
+  font-weight: 600;
+  font-size: 13px;
+  padding: 9px 10px;
+  border-radius: 8px;
+  transition: background 0.15s, color 0.15s;
 }
 
-.sidebar-footer a:hover { color: var(--text-secondary); text-decoration: underline; }
+.footer-link:hover { background: var(--surface-2); color: var(--text); }
 
 .import-note code {
   font-family: 'IBM Plex Mono', monospace;
