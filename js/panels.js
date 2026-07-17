@@ -313,5 +313,6 @@ gridSettingInput.checked = settings.showGrid
 applyGridVisibility()
 gridSettingInput.addEventListener('change', () => {
   settings.showGrid = gridSettingInput.checked
+  localStorage.setItem('quick-plot-show-grid', settings.showGrid ? '1' : '0')
   applyGridVisibility()
 })

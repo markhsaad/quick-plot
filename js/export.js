@@ -5,6 +5,7 @@ const exportBordersInput = document.getElementById('setting-export-borders')
 exportBordersInput.checked = settings.exportBorders
 exportBordersInput.addEventListener('change', () => {
   settings.exportBorders = exportBordersInput.checked
+  localStorage.setItem('quick-plot-export-borders', settings.exportBorders ? '1' : '0')
 })
 
 document.getElementById('export-btn').addEventListener('click', () => {

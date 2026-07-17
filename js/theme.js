@@ -2,8 +2,8 @@
 // range helper, and the dark-mode toggle's UI wiring.
 
 const settings = {
-  showGrid: true,
-  exportBorders: true,
+  showGrid: localStorage.getItem('quick-plot-show-grid') !== '0',
+  exportBorders: localStorage.getItem('quick-plot-export-borders') !== '0',
   darkMode: localStorage.getItem('quick-plot-dark-mode') === '1',
 }
 document.documentElement.setAttribute('data-theme', settings.darkMode ? 'dark' : 'light')
