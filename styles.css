@@ -784,7 +784,7 @@ body { background: var(--bg); font-family: sans-serif; }
 }
 
 .sidebar-footer {
-  margin-top: auto;
+  margin-top: 6px;
   padding-top: 8px;
   border-top: 1px solid var(--border);
   display: flex;
